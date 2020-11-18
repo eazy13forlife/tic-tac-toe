@@ -29,11 +29,11 @@ return{
     {id:"_7",
     letter:null}],
 
-    [{id:"2",
+    [{id:"_2",
     letter:null},
     {id:"_5",
     letter:null},
-    {id:"_7",
+    {id:"_8",
     letter:null}],
 
     [{id:"_3",
@@ -56,7 +56,7 @@ return{
     letter:null},
     {id:"_7",
     letter:"no"}]
-    ]
+    ],
   }
 
 }

@@ -15718,9 +15718,9 @@ var returnGameBoard = function returnGameBoard() {
       letter: null }], [{ id: "_1",
       letter: null }, { id: "_4",
       letter: null }, { id: "_7",
-      letter: null }], [{ id: "2",
+      letter: null }], [{ id: "_2",
       letter: null }, { id: "_5",
-      letter: null }, { id: "_7",
+      letter: null }, { id: "_8",
       letter: null }], [{ id: "_3",
       letter: null }, { id: "_6",
       letter: null }, { id: "_9",
@@ -15751,6 +15751,11 @@ var _gameboard = __webpack_require__(/*! ./gameboard.js */ "./source/gameboard.j
 
 var _player = __webpack_require__(/*! ./player.js */ "./source/player.js");
 
+var _playGame = __webpack_require__(/*! ./playGame.js */ "./source/playGame.js");
+
+var player1 = (0, _player.returnPlayerObject)("eric", "X");
+var player2 = (0, _player.returnPlayerObject)("Michael", "O");
+
 var ticTacBoard = document.querySelector(".grid-container");
 for (var i = 1; i <= 9; i++) {
   var box = document.createElement("div");
@@ -15764,12 +15769,42 @@ var firstGameBoard = (0, _gameboard.returnGameBoard)();
 var allSquares = document.querySelectorAll(".square");
 allSquares.forEach(function (square) {
   square.addEventListener("click", function (e) {
-    var player1 = (0, _player.returnPlayerObject)("eric", "x");
     player1.pushLetter(firstGameBoard, e.target.id);
     console.log(firstGameBoard);
     player1.check3(firstGameBoard);
   });
 });
+
+/***/ }),
+
+/***/ "./source/playGame.js":
+/*!****************************!*\
+  !*** ./source/playGame.js ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var playGame = function playGame(gameboard, id, player1) {
+  player1.renderLetter(id);
+  player1.pushLetter(gameboard, id);
+  if (player1.check3(gameboard)) {} /*else{
+                                     player2.renderLetter(id);
+                                     player2.pushLetter(gameboard,id);
+                                     if(player2.check3(gameboard)){
+                                      }else{
+                                       playGame(gameboard,id,player1,player2)
+                                     }
+                                    }
+                                    */
+};
+
+exports.playGame = playGame;
 
 /***/ }),
 
@@ -15794,7 +15829,7 @@ var returnPlayerObject = function returnPlayerObject(name, letter) {
     name: name,
     letter: letter
   };
-  return _extends({}, initialObject, renderLetterF(), pushLetterF(), check3F());
+  return _extends({}, initialObject, renderLetterF(), pushLetterF(), check3F(), displayMessageF());
 };
 
 var renderLetterF = function renderLetterF() {
@@ -15808,19 +15843,19 @@ var renderLetterF = function renderLetterF() {
 var pushLetterF = function pushLetterF() {
   return {
     pushLetter: function pushLetter(gameboard, elementId) {
-      var index = gameboard.gameArray.findIndex(function (array) {
-        return array.find(function (object) {
-          return object.id === elementId;
-        });
-      });
-      if (index > -1) {
-        var value = gameboard.gameArray[index].find(function (object) {
+      var _this = this;
+
+      gameboard.gameArray = gameboard.gameArray.map(function (array) {
+        var value = array.find(function (object) {
           return object.id === elementId;
         });
         if (value) {
-          value.letter = this.letter;
+          value.letter = _this.letter;
+          return array;
+        } else {
+          return array;
         }
-      }
+      });
     }
   };
 };
@@ -15828,16 +15863,26 @@ var pushLetterF = function pushLetterF() {
 var check3F = function check3F() {
   return {
     check3: function check3(gameboard) {
-      var _this = this;
+      var _this2 = this;
 
-      var value = gameboard.gameArray.every(function (array) {
-        return array.every(function (object) {
-          return object.letter === _this.letter;
+      for (var i = 0; i <= gameboard.gameArray.length - 1; i++) {
+        var set = gameboard.gameArray[i].every(function (object) {
+          return object.letter === _this2.letter;
         });
-      });
-      if (value) {
-        console.log("yessir");
+        if (set) {
+          this.displayMessage();
+          return true;
+          break;
+        }
       }
+    }
+  };
+};
+
+var displayMessageF = function displayMessageF() {
+  return {
+    displayMessage: function displayMessage() {
+      console.log(this.name + " won!");
     }
   };
 };
@@ -15852,6 +15897,21 @@ const filterSet=(object,firstId,secondId,thirdId)=>{
     })
   }
 */
+/*
+check3(gameboard){
+  const value=gameboard.gameArray.every((array)=>{
+    return array.every((object)=>{
+      return object.letter===this.letter;
+    })
+  })
+  if(value){
+    this.displayMessage();
+    return true;
+  }
+  const firstSet=gameboard.gameArray[0].every((object)=>{
+    return object.letter===this.letter
+  })
+  */
 
 exports.returnPlayerObject = returnPlayerObject;
 

@@ -8,6 +8,7 @@ const returnPlayerObject=(name,letter)=>{
     ...renderLetterF(),
     ...pushLetterF(),
     ...check3F(),
+    ...displayMessageF(),
   }
 }
 
@@ -22,19 +23,17 @@ const renderLetterF=()=>{
 const pushLetterF=()=>{
   return{
     pushLetter(gameboard,elementId){
-      const index=gameboard.gameArray.findIndex((array)=>{
-        return array.find((object)=>{
-          return object.id===elementId
-        })
-      })
-      if(index>-1){
-        const value=gameboard.gameArray[index].find((object)=>{
+      gameboard.gameArray=gameboard.gameArray.map((array)=>{
+        const value=array.find((object)=>{
           return object.id===elementId;
         })
         if(value){
           value.letter=this.letter;
+          return array;
+        }else{
+          return array;
         }
-      }
+      })
     }
   }
 }
@@ -42,14 +41,27 @@ const pushLetterF=()=>{
 const check3F=()=>{
   return{
     check3(gameboard){
-      const value=gameboard.gameArray.every((array)=>{
-        return array.every((object)=>{
+      for(let i=0;i<=gameboard.gameArray.length-1;i++){
+        const set=gameboard.gameArray[i].every((object)=>{
           return object.letter===this.letter;
         })
-      })
-      if(value){
-        console.log("yessir")
+          if(set){
+            this.displayMessage();
+            return true;
+            break;
+          }
+        }
       }
+    }
+  }
+
+
+
+
+const displayMessageF=()=>{
+  return{
+    displayMessage(){
+      console.log(`${this.name} won!`);
     }
   }
 }
@@ -64,7 +76,21 @@ const filterSet=(object,firstId,secondId,thirdId)=>{
     })
   }
 */
-
+/*
+check3(gameboard){
+  const value=gameboard.gameArray.every((array)=>{
+    return array.every((object)=>{
+      return object.letter===this.letter;
+    })
+  })
+  if(value){
+    this.displayMessage();
+    return true;
+  }
+  const firstSet=gameboard.gameArray[0].every((object)=>{
+    return object.letter===this.letter
+  })
+  */
 
 
 export{returnPlayerObject};
