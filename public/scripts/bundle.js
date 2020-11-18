@@ -15704,6 +15704,7 @@ module.exports = g;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+//function that returns a gameboard object. Each object will hold the game array, along with a method that clears the gameBoard
 var returnGameBoard = function returnGameBoard() {
   return {
     gameArray: [[{ id: "_1",
@@ -15756,6 +15757,7 @@ var _playGame = __webpack_require__(/*! ./playGame.js */ "./source/playGame.js")
 var player1 = (0, _player.returnPlayerObject)("eric", "X");
 var player2 = (0, _player.returnPlayerObject)("Michael", "O");
 
+//create the tictac board for 9 squares along with their respective ids.
 var ticTacBoard = document.querySelector(".grid-container");
 for (var i = 1; i <= 9; i++) {
   var box = document.createElement("div");
@@ -15824,14 +15826,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+//create a function that returns a player object. we pass in the name of the player and the letter that they want to be.
 var returnPlayerObject = function returnPlayerObject(name, letter) {
   var initialObject = {
     name: name,
     letter: letter
-  };
-  return _extends({}, initialObject, renderLetterF(), pushLetterF(), check3F(), displayMessageF());
+    //we return an object with the initial object, along with all of the functions that return a method that we want used in our object.
+  };return _extends({}, initialObject, renderLetterF(), pushLetterF(), check3F(), displayMessageF());
 };
-
+//function that renders the letter(x or o) to the screen when a player clicks a square
 var renderLetterF = function renderLetterF() {
   return {
     renderLetter: function renderLetter(id) {
@@ -15840,18 +15843,23 @@ var renderLetterF = function renderLetterF() {
   };
 };
 
+//function that pushes the players letter to the gameboard array for that specific square
 var pushLetterF = function pushLetterF() {
   return {
     pushLetter: function pushLetter(gameboard, elementId) {
       var _this = this;
 
+      //go to the gameArray and use map feature. Map will look at each individual element in the array and a create a new array based on the return value of the callback function for every element in the calling array.
       gameboard.gameArray = gameboard.gameArray.map(function (array) {
+        //while looking at the individual array, we want to find the object within where object.id equals the elementId that we clicked
         var value = array.find(function (object) {
           return object.id === elementId;
         });
+        //if that object is found, change its letter to the players letter and then return that new array. So map will return this new array
         if (value) {
           value.letter = _this.letter;
           return array;
+          //if that object is not found, just return the array as it is.
         } else {
           return array;
         }
@@ -15860,12 +15868,14 @@ var pushLetterF = function pushLetterF() {
   };
 };
 
+//function that checks if there are 3 x or o in a row
 var check3F = function check3F() {
   return {
     check3: function check3(gameboard) {
       var _this2 = this;
 
       for (var i = 0; i <= gameboard.gameArray.length - 1; i++) {
+        //we look at each individual element(which happens to be an array) in the total gameArray and if all the letter properties in that element have a value of the players letter, run the displayMessage saying who the winner is
         var set = gameboard.gameArray[i].every(function (object) {
           return object.letter === _this2.letter;
         });

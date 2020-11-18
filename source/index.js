@@ -5,6 +5,8 @@ import{playGame} from "./playGame.js";
 const player1=returnPlayerObject("eric","X");
 const player2=returnPlayerObject("Michael","O")
 
+
+//create the tictac board for 9 squares along with their respective ids.
 const ticTacBoard=document.querySelector(".grid-container")
 for(let i=1;i<=9;i++){
   const box=document.createElement("div");

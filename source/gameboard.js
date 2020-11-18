@@ -1,3 +1,4 @@
+//function that returns a gameboard object. Each object will hold the game array, along with a method that clears the gameBoard
 const returnGameBoard=()=>{
 return{
   gameArray:[
