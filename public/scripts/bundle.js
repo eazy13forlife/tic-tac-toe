@@ -15848,7 +15848,7 @@ var playerMove = function playerMove(player, gameboard, id) {
     return object.id === id;
   });
   if (value.letter) {
-    //if the letter exists and you're still clicking it, it is still your turn. You just have to click something else.
+    //if the letter exists and you're still clicking it, it is still your turn,so we keep the message the same. You just have to click something else.
     if (type === "odd") {
       _domElements.messageEl.textContent = player.name + ", its your turn";
     } else {
