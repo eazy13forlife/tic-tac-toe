@@ -15731,7 +15731,7 @@ var returnGameBoard = function returnGameBoard() {
       letter: null }], [{ id: "_3",
       letter: null }, { id: "_5",
       letter: null }, { id: "_7",
-      letter: "no" }]]
+      letter: null }]]
   };
 };
 exports.returnGameBoard = returnGameBoard;
@@ -15767,15 +15767,41 @@ for (var i = 1; i <= 9; i++) {
   ticTacBoard.appendChild(box);
 }
 var firstGameBoard = (0, _gameboard.returnGameBoard)();
-
+console.log(firstGameBoard);
+var type = "odd";
 var allSquares = document.querySelectorAll(".square");
 allSquares.forEach(function (square) {
-  square.addEventListener("click", function (e) {
-    player1.pushLetter(firstGameBoard, e.target.id);
-    console.log(firstGameBoard);
-    player1.check3(firstGameBoard);
+
+  square.addEventListener("click", function play() {
+    if (type === "odd") {
+      (0, _playGame.playGame)(player1, firstGameBoard, square.id);
+      square.removeEventListener("click", play);
+      type = "even";
+    } else if (type === "even") {
+      (0, _playGame.playGame)(player2, firstGameBoard, square.id);
+      square.removeEventListener("click", play);
+      type = "odd";
+    }
   });
 });
+
+/*
+const allSquares=document.querySelectorAll(".square")
+allSquares.forEach((square)=>{
+  square.addEventListener("click",(e)=>{
+    player1.renderLetter(e.target.id)
+    player1.pushLetter(firstGameBoard,e.target.id);
+    player1.check3(firstGameBoard);
+    /*
+    player2.renderLetter(e.target.id);
+    player2.pushLetter(firstGameBoard,e.target.id)
+
+    playGame(firstGameBoard,e.target.id,player1,player2)
+    console.log(firstGameBoard);
+
+  })
+})
+*/
 
 /***/ }),
 
@@ -15792,21 +15818,27 @@ allSquares.forEach(function (square) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var playGame = function playGame(gameboard, id, player1) {
-  player1.renderLetter(id);
-  player1.pushLetter(gameboard, id);
-  if (player1.check3(gameboard)) {} /*else{
-                                     player2.renderLetter(id);
-                                     player2.pushLetter(gameboard,id);
-                                     if(player2.check3(gameboard)){
-                                      }else{
-                                       playGame(gameboard,id,player1,player2)
-                                     }
-                                    }
-                                    */
+
+
+var playGame = function playGame(player, gameboard, id) {
+  player.renderLetter(id);
+  player.pushLetter(gameboard, id);
+  player.check3(gameboard);
 };
 
 exports.playGame = playGame;
+
+/*
+if(value.letter){
+  return array;
+}else if(!value.letter){
+  value.letter=this.letter;
+  return array;
+}//if that object is not found where the object id equals the element id, just return the array as it is.
+}else{
+return array;
+}
+*/
 
 /***/ }),
 
@@ -15855,11 +15887,10 @@ var pushLetterF = function pushLetterF() {
         var value = array.find(function (object) {
           return object.id === elementId;
         });
-        //if that object is found, change its letter to the players letter and then return that new array. So map will return this new array
+        //if that object is found, change its letter property to the players letter if there is not already a letter there. and then return that new array. So map will return this new array
         if (value) {
           value.letter = _this.letter;
           return array;
-          //if that object is not found, just return the array as it is.
         } else {
           return array;
         }
@@ -15875,6 +15906,7 @@ var check3F = function check3F() {
       var _this2 = this;
 
       for (var i = 0; i <= gameboard.gameArray.length - 1; i++) {
+
         //we look at each individual element(which happens to be an array) in the total gameArray and if all the letter properties in that element have a value of the players letter, run the displayMessage saying who the winner is
         var set = gameboard.gameArray[i].every(function (object) {
           return object.letter === _this2.letter;

@@ -12,16 +12,53 @@ for(let i=1;i<=9;i++){
   const box=document.createElement("div");
   box.textContent="";
   box.setAttribute("id", `_${i}`);
-  box.classList.add("square")
+  box.classList.add("square");
   ticTacBoard.appendChild(box);
 }
-const firstGameBoard=returnGameBoard()
+const firstGameBoard=returnGameBoard();
+console.log(firstGameBoard)
+  let type="odd";
+      const allSquares=document.querySelectorAll(".square");
+      allSquares.forEach((square)=>{
 
+        square.addEventListener("click", function play(){
+          if(type==="odd"){
+            playGame(player1,firstGameBoard,square.id);
+            square.removeEventListener("click",play);
+            type="even";
+          }else if(type==="even"){
+            playGame(player2,firstGameBoard,square.id);
+            square.removeEventListener("click",play);
+            type="odd"
+          }
+
+        })
+    });
+
+
+
+
+
+
+
+
+
+
+
+/*
 const allSquares=document.querySelectorAll(".square")
 allSquares.forEach((square)=>{
   square.addEventListener("click",(e)=>{
+    player1.renderLetter(e.target.id)
     player1.pushLetter(firstGameBoard,e.target.id);
+    player1.check3(firstGameBoard);
+    /*
+    player2.renderLetter(e.target.id);
+    player2.pushLetter(firstGameBoard,e.target.id)
+
+    playGame(firstGameBoard,e.target.id,player1,player2)
     console.log(firstGameBoard);
-  player1.check3(firstGameBoard)
+
   })
 })
+*/

@@ -32,11 +32,10 @@ const pushLetterF=()=>{
         const value=array.find((object)=>{
           return object.id===elementId;
         })
-        //if that object is found, change its letter to the players letter and then return that new array. So map will return this new array
+        //if that object is found, change its letter property to the players letter if there is not already a letter there. and then return that new array. So map will return this new array
         if(value){
           value.letter=this.letter;
           return array;
-        //if that object is not found, just return the array as it is.
         }else{
           return array;
         }
@@ -50,15 +49,16 @@ const check3F=()=>{
   return{
     check3(gameboard){
       for(let i=0;i<=gameboard.gameArray.length-1;i++){
-        //we look at each individual element(which happens to be an array) in the total gameArray and if all the letter properties in that element have a value of the players letter, run the displayMessage saying who the winner is
-        const set=gameboard.gameArray[i].every((object)=>{
-          return object.letter===this.letter;
-        })
-          if(set){
-            this.displayMessage();
-            return true;
-            break;
-          }
+        
+          //we look at each individual element(which happens to be an array) in the total gameArray and if all the letter properties in that element have a value of the players letter, run the displayMessage saying who the winner is
+          const set=gameboard.gameArray[i].every((object)=>{
+            return object.letter===this.letter;
+          })
+            if(set){
+              this.displayMessage();
+              return true;
+              break;
+            }
         }
       }
     }

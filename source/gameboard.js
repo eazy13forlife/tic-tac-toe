@@ -56,7 +56,7 @@ return{
     {id:"_5",
     letter:null},
     {id:"_7",
-    letter:"no"}]
+    letter:null}]
     ],
   }
 

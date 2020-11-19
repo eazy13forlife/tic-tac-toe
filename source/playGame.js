@@ -1,18 +1,21 @@
-const playGame=(gameboard,id,player1)=>{
-  player1.renderLetter(id);
-  player1.pushLetter(gameboard,id);
-  if(player1.check3(gameboard)){
 
-  }/*else{
-    player2.renderLetter(id);
-    player2.pushLetter(gameboard,id);
-    if(player2.check3(gameboard)){
 
-    }else{
-      playGame(gameboard,id,player1,player2)
-    }
-  }
-  */
+const playGame=(player,gameboard,id)=>{
+  player.renderLetter(id);
+  player.pushLetter(gameboard,id);
+  player.check3(gameboard);
 }
 
 export{playGame}
+
+/*
+if(value.letter){
+  return array;
+}else if(!value.letter){
+  value.letter=this.letter;
+  return array;
+}//if that object is not found where the object id equals the element id, just return the array as it is.
+}else{
+return array;
+}
+*/
