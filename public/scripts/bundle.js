@@ -15691,6 +15691,40 @@ module.exports = g;
 
 /***/ }),
 
+/***/ "./source/domElements.js":
+/*!*******************************!*\
+  !*** ./source/domElements.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+//create the tictac board for 9 squares along with their respective ids.
+var ticTacBoard = document.querySelector(".grid-container");
+for (var i = 1; i <= 9; i++) {
+  var box = document.createElement("div");
+  box.textContent = "";
+  box.setAttribute("id", "_" + i);
+  box.classList.add("square");
+  ticTacBoard.appendChild(box);
+}
+
+var reset = document.querySelector("#reset");
+var allSquares = document.querySelectorAll(".square");
+var messageEl = document.querySelector("#message");
+
+console.log(allSquares);
+exports.reset = reset;
+exports.allSquares = allSquares;
+exports.messageEl = messageEl;
+
+/***/ }),
+
 /***/ "./source/gameboard.js":
 /*!*****************************!*\
   !*** ./source/gameboard.js ***!
@@ -15707,31 +15741,16 @@ Object.defineProperty(exports, "__esModule", {
 //function that returns a gameboard object. Each object will hold the game array, along with a method that clears the gameBoard
 var returnGameBoard = function returnGameBoard() {
   return {
-    gameArray: [[{ id: "_1",
+    gameArray: [{ id: "_1",
       letter: null }, { id: "_2",
       letter: null }, { id: "_3",
-      letter: null }], [{ id: "_4",
-      letter: null }, { id: "_5",
-      letter: null }, { id: "_6",
-      letter: null }], [{ id: "_7",
-      letter: null }, { id: "_8",
-      letter: null }, { id: "_9",
-      letter: null }], [{ id: "_1",
       letter: null }, { id: "_4",
-      letter: null }, { id: "_7",
-      letter: null }], [{ id: "_2",
       letter: null }, { id: "_5",
-      letter: null }, { id: "_8",
-      letter: null }], [{ id: "_3",
       letter: null }, { id: "_6",
-      letter: null }, { id: "_9",
-      letter: null }], [{ id: "_1",
-      letter: null }, { id: "_5",
-      letter: null }, { id: "_9",
-      letter: null }], [{ id: "_3",
-      letter: null }, { id: "_5",
       letter: null }, { id: "_7",
-      letter: null }]]
+      letter: null }, { id: "_8",
+      letter: null }, { id: "_9",
+      letter: null }]
   };
 };
 exports.returnGameBoard = returnGameBoard;
@@ -15754,35 +15773,33 @@ var _player = __webpack_require__(/*! ./player.js */ "./source/player.js");
 
 var _playGame = __webpack_require__(/*! ./playGame.js */ "./source/playGame.js");
 
-var player1 = (0, _player.returnPlayerObject)("eric", "X");
-var player2 = (0, _player.returnPlayerObject)("Michael", "O");
+var _domElements = __webpack_require__(/*! ./domElements.js */ "./source/domElements.js");
 
-//create the tictac board for 9 squares along with their respective ids.
-var ticTacBoard = document.querySelector(".grid-container");
-for (var i = 1; i <= 9; i++) {
-  var box = document.createElement("div");
-  box.textContent = "";
-  box.setAttribute("id", "_" + i);
-  box.classList.add("square");
-  ticTacBoard.appendChild(box);
-}
+//initially,set player1 and player2 equal to nothing
+var player1 = void 0;
+var player2 = void 0;
+
+//ask the user for who player 1 is and who player 2 is
+var play1Name = window.prompt("What is player 1's name?");
+var play2Name = window.prompt("What is player 2's name?");
+player1 = (0, _player.returnPlayerObject)(play1Name, "X");
+player2 = (0, _player.returnPlayerObject)(play2Name, "O");
+
 var firstGameBoard = (0, _gameboard.returnGameBoard)();
-console.log(firstGameBoard);
-var type = "odd";
-var allSquares = document.querySelectorAll(".square");
-allSquares.forEach(function (square) {
 
+_domElements.messageEl.textContent = player1.name + ", it's your turn.";
+
+//for each square,add a click event listener
+_domElements.allSquares.forEach(function (square) {
   square.addEventListener("click", function play() {
-    if (type === "odd") {
-      (0, _playGame.playGame)(player1, firstGameBoard, square.id);
-      square.removeEventListener("click", play);
-      type = "even";
-    } else if (type === "even") {
-      (0, _playGame.playGame)(player2, firstGameBoard, square.id);
-      square.removeEventListener("click", play);
-      type = "odd";
-    }
+    (0, _playGame.fullGame)(square, player1, player2, firstGameBoard, play);
+    console.log(firstGameBoard);
   });
+});
+
+//for the reset button, add an event listener
+_domElements.reset.addEventListener("click", function (e) {
+  (0, _playGame.resetGame)(player1, player2, firstGameBoard);
 });
 
 /*
@@ -15796,7 +15813,7 @@ allSquares.forEach((square)=>{
     player2.renderLetter(e.target.id);
     player2.pushLetter(firstGameBoard,e.target.id)
 
-    playGame(firstGameBoard,e.target.id,player1,player2)
+    playerMove(firstGameBoard,e.target.id,player1,player2)
     console.log(firstGameBoard);
 
   })
@@ -15818,27 +15835,79 @@ allSquares.forEach((square)=>{
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.resetGame = exports.messageEl = exports.fullGame = undefined;
 
+var _domElements = __webpack_require__(/*! ./domElements.js */ "./source/domElements.js");
 
-var playGame = function playGame(player, gameboard, id) {
-  player.renderLetter(id);
-  player.pushLetter(gameboard, id);
-  player.check3(gameboard);
+var type = "odd";
+var i = 0;
+
+//function for when a player makes a move
+var playerMove = function playerMove(player, gameboard, id) {
+  var value = gameboard.gameArray.find(function (object) {
+    return object.id === id;
+  });
+  if (value.letter) {
+    //if the letter exists and you're still clicking it, it is still your turn. You just have to click something else.
+    if (type === "odd") {
+      _domElements.messageEl.textContent = player.name + ", its your turn";
+    } else {
+      _domElements.messageEl.textContent = player.name + ", its your turn";
+    }
+  } else {
+    adjustGlobals();
+    player.renderLetter(id);
+    player.pushLetter(gameboard, id);
+    player.check3(gameboard);
+  }
 };
 
-exports.playGame = playGame;
+//function to play full game
+var fullGame = function fullGame(item, player1, player2, gameboard) {
+  //if either player1 or player 2 check 3 is correct(has 3 in a row), dont do anything when we click
+  if (player1.check3(gameboard) || player2.check3(gameboard)) {} else if (i === 9) {} else {
+    if (type === "odd") {
+      _domElements.messageEl.textContent = player2.name + ", its your turn";
+      playerMove(player1, gameboard, item.id);
+    } else if (type === "even") {
+      _domElements.messageEl.textContent = player1.name + ", its your turn";
+      playerMove(player2, gameboard, item.id);
+    }
+  }
+};
 
-/*
-if(value.letter){
-  return array;
-}else if(!value.letter){
-  value.letter=this.letter;
-  return array;
-}//if that object is not found where the object id equals the element id, just return the array as it is.
-}else{
-return array;
-}
-*/
+var adjustGlobals = function adjustGlobals() {
+  //item.removeEventListener("click",functionToRemove);
+  if (type === "even") {
+    type = "odd";
+  } else {
+    type = "even";
+  }
+  i++;
+  if (i === 9) {
+    _domElements.messageEl.textContent = "Tie Game!";
+  }
+};
+
+var resetGame = function resetGame(player1, player2, gameboard) {
+  //first make each letter in the game array equal to null
+  gameboard.gameArray.forEach(function (object) {
+    object.letter = null;
+  });
+  //remove all the textContent from each square
+  var allSquares = document.querySelectorAll(".square");
+  allSquares.forEach(function (square) {
+    square.textContent = "";
+  });
+  //begin with type="odd"(the first person) and i=0(meaning no moves have been made)
+  type = "odd";
+  i = 0;
+  //change the textContent
+  _domElements.messageEl.textContent = player1.name + ", its your turn";
+};
+exports.fullGame = fullGame;
+exports.messageEl = _domElements.messageEl;
+exports.resetGame = resetGame;
 
 /***/ }),
 
@@ -15855,8 +15924,11 @@ return array;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.returnPlayerObject = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _playGame = __webpack_require__(/*! ./playGame.js */ "./source/playGame.js");
 
 //create a function that returns a player object. we pass in the name of the player and the letter that they want to be.
 var returnPlayerObject = function returnPlayerObject(name, letter) {
@@ -15864,7 +15936,7 @@ var returnPlayerObject = function returnPlayerObject(name, letter) {
     name: name,
     letter: letter
     //we return an object with the initial object, along with all of the functions that return a method that we want used in our object.
-  };return _extends({}, initialObject, renderLetterF(), pushLetterF(), check3F(), displayMessageF());
+  };return _extends({}, initialObject, renderLetterF(), pushLetterF(), check3F(), displayMessageF(), filterSetF());
 };
 //function that renders the letter(x or o) to the screen when a player clicks a square
 var renderLetterF = function renderLetterF() {
@@ -15879,22 +15951,12 @@ var renderLetterF = function renderLetterF() {
 var pushLetterF = function pushLetterF() {
   return {
     pushLetter: function pushLetter(gameboard, elementId) {
-      var _this = this;
-
-      //go to the gameArray and use map feature. Map will look at each individual element in the array and a create a new array based on the return value of the callback function for every element in the calling array.
-      gameboard.gameArray = gameboard.gameArray.map(function (array) {
-        //while looking at the individual array, we want to find the object within where object.id equals the elementId that we clicked
-        var value = array.find(function (object) {
-          return object.id === elementId;
-        });
-        //if that object is found, change its letter property to the players letter if there is not already a letter there. and then return that new array. So map will return this new array
-        if (value) {
-          value.letter = _this.letter;
-          return array;
-        } else {
-          return array;
-        }
+      var value = gameboard.gameArray.find(function (object) {
+        return object.id === elementId;
       });
+      if (value) {
+        value.letter = this.letter;
+      }
     }
   };
 };
@@ -15903,19 +15965,19 @@ var pushLetterF = function pushLetterF() {
 var check3F = function check3F() {
   return {
     check3: function check3(gameboard) {
-      var _this2 = this;
-
-      for (var i = 0; i <= gameboard.gameArray.length - 1; i++) {
-
-        //we look at each individual element(which happens to be an array) in the total gameArray and if all the letter properties in that element have a value of the players letter, run the displayMessage saying who the winner is
-        var set = gameboard.gameArray[i].every(function (object) {
-          return object.letter === _this2.letter;
-        });
-        if (set) {
-          this.displayMessage();
-          return true;
-          break;
-        }
+      var set1 = this.filterSet(gameboard, "_1", "_2", "_3");
+      var set2 = this.filterSet(gameboard, "_4", "_5", "_6");
+      var set3 = this.filterSet(gameboard, "_7", "_8", "_9");
+      var set4 = this.filterSet(gameboard, "_1", "_4", "_7");
+      var set5 = this.filterSet(gameboard, "_2", "_5", "_8");
+      var set6 = this.filterSet(gameboard, "_3", "_6", "_9");
+      var set7 = this.filterSet(gameboard, "_1", "_5", "_9");
+      var set8 = this.filterSet(gameboard, "_3", "_5", "_7");
+      if (set1 || set2 || set3 || set4 || set5 || set6 || set7 || set8) {
+        this.displayMessage();
+        return true;
+      } else {
+        console.log("hello");
       }
     }
   };
@@ -15924,21 +15986,37 @@ var check3F = function check3F() {
 var displayMessageF = function displayMessageF() {
   return {
     displayMessage: function displayMessage() {
-      console.log(this.name + " won!");
+      _playGame.messageEl.textContent = this.name + " won!";
     }
   };
 };
-/*
-const filterSet=(object,firstId,secondId,thirdId)=>{
-    return object.id===firstId||object.id===secondId||object.id===thirdId
-  }
 
-  const validateSet=(set)=>{
-    return set.every((object)=>{
-      return object.letter===this.letter
-    })
-  }
-*/
+var filterSetF = function filterSetF() {
+  return {
+    filterSet: function filterSet(object, firstId, secondId, thirdId) {
+      var _this = this;
+
+      var set = object.gameArray.filter(function (object) {
+        return object.id === firstId || object.id === secondId || object.id === thirdId;
+      });
+      return set.every(function (object) {
+        return object.letter === _this.letter;
+      });
+    }
+  };
+};
+
+var filterSemt = function filterSemt(gameboard, firstId, secondId, thirdId) {
+  gameboard.gameArray;
+  return object.id === firstId || object.id === secondId || object.id === thirdId;
+};
+
+var validateSet = function validateSet(set) {
+  return set.every(function (object) {
+    return object.letter === undefined.letter;
+  });
+};
+
 /*
 check3(gameboard){
   const value=gameboard.gameArray.every((array)=>{

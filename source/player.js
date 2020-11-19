@@ -1,3 +1,5 @@
+import{messageEl} from "./playGame.js"
+
 //create a function that returns a player object. we pass in the name of the player and the letter that they want to be.
 const returnPlayerObject=(name,letter)=>{
   const initialObject={
@@ -11,6 +13,8 @@ const returnPlayerObject=(name,letter)=>{
     ...pushLetterF(),
     ...check3F(),
     ...displayMessageF(),
+    ...filterSetF(),
+
   }
 }
 //function that renders the letter(x or o) to the screen when a player clicks a square
@@ -26,20 +30,12 @@ const renderLetterF=()=>{
 const pushLetterF=()=>{
   return{
     pushLetter(gameboard,elementId){
-      //go to the gameArray and use map feature. Map will look at each individual element in the array and a create a new array based on the return value of the callback function for every element in the calling array.
-      gameboard.gameArray=gameboard.gameArray.map((array)=>{
-        //while looking at the individual array, we want to find the object within where object.id equals the elementId that we clicked
-        const value=array.find((object)=>{
-          return object.id===elementId;
-        })
-        //if that object is found, change its letter property to the players letter if there is not already a letter there. and then return that new array. So map will return this new array
-        if(value){
-          value.letter=this.letter;
-          return array;
-        }else{
-          return array;
-        }
+      const value=gameboard.gameArray.find((object)=>{
+        return object.id===elementId;
       })
+      if(value){
+        value.letter=this.letter;
+      }
     }
   }
 }
@@ -48,21 +44,24 @@ const pushLetterF=()=>{
 const check3F=()=>{
   return{
     check3(gameboard){
-      for(let i=0;i<=gameboard.gameArray.length-1;i++){
-        
-          //we look at each individual element(which happens to be an array) in the total gameArray and if all the letter properties in that element have a value of the players letter, run the displayMessage saying who the winner is
-          const set=gameboard.gameArray[i].every((object)=>{
-            return object.letter===this.letter;
-          })
-            if(set){
-              this.displayMessage();
-              return true;
-              break;
-            }
-        }
+      const set1=this.filterSet(gameboard,"_1","_2","_3");
+      const set2=this.filterSet(gameboard,"_4","_5","_6");
+      const set3=this.filterSet(gameboard,"_7","_8","_9");
+      const set4=this.filterSet(gameboard,"_1","_4","_7");
+      const set5=this.filterSet(gameboard,"_2","_5","_8");
+      const set6=this.filterSet(gameboard,"_3","_6","_9");
+      const set7=this.filterSet(gameboard,"_1","_5","_9");
+      const set8=this.filterSet(gameboard,"_3","_5","_7");
+      if(set1||set2||set3||set4||set5||set6||set7||set8){
+        this.displayMessage();
+        return true;
+      }else{
+        console.log("hello")
       }
     }
   }
+}
+
 
 
 
@@ -70,12 +69,28 @@ const check3F=()=>{
 const displayMessageF=()=>{
   return{
     displayMessage(){
-      console.log(`${this.name} won!`);
+      messageEl.textContent=`${this.name} won!`;
     }
   }
 }
-/*
-const filterSet=(object,firstId,secondId,thirdId)=>{
+
+const filterSetF=()=>{
+  return{
+    filterSet(object,firstId,secondId,thirdId){
+      const set= object.gameArray.filter((object)=>{
+        return object.id===firstId||object.id===secondId||object.id===thirdId
+      })
+      return set.every((object)=>{
+        return object.letter===this.letter
+      })
+    }
+  }
+}
+
+
+
+const filterSemt=(gameboard,firstId,secondId,thirdId)=>{
+  gameboard.gameArray
     return object.id===firstId||object.id===secondId||object.id===thirdId
   }
 
@@ -84,7 +99,7 @@ const filterSet=(object,firstId,secondId,thirdId)=>{
       return object.letter===this.letter
     })
   }
-*/
+
 /*
 check3(gameboard){
   const value=gameboard.gameArray.every((array)=>{

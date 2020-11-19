@@ -1,42 +1,34 @@
 import{returnGameBoard}from"./gameboard.js"
 import{returnPlayerObject} from "./player.js"
-import{playGame} from "./playGame.js";
+import{playerMove,fullGame,resetGame} from "./playGame.js";
+import{allSquares,reset,messageEl}from "./domElements.js"
 
-const player1=returnPlayerObject("eric","X");
-const player2=returnPlayerObject("Michael","O")
+//initially,set player1 and player2 equal to nothing
+let player1;
+let player2;
 
+//ask the user for who player 1 is and who player 2 is
+const play1Name=window.prompt("What is player 1's name?")
+const play2Name=window.prompt("What is player 2's name?")
+ player1=returnPlayerObject(play1Name,"X");
+ player2=returnPlayerObject(play2Name,"O")
 
-//create the tictac board for 9 squares along with their respective ids.
-const ticTacBoard=document.querySelector(".grid-container")
-for(let i=1;i<=9;i++){
-  const box=document.createElement("div");
-  box.textContent="";
-  box.setAttribute("id", `_${i}`);
-  box.classList.add("square");
-  ticTacBoard.appendChild(box);
-}
 const firstGameBoard=returnGameBoard();
-console.log(firstGameBoard)
-  let type="odd";
-      const allSquares=document.querySelectorAll(".square");
-      allSquares.forEach((square)=>{
 
-        square.addEventListener("click", function play(){
-          if(type==="odd"){
-            playGame(player1,firstGameBoard,square.id);
-            square.removeEventListener("click",play);
-            type="even";
-          }else if(type==="even"){
-            playGame(player2,firstGameBoard,square.id);
-            square.removeEventListener("click",play);
-            type="odd"
-          }
+messageEl.textContent=`${player1.name}, it's your turn.`
 
-        })
-    });
+//for each square,add a click event listener
+allSquares.forEach((square)=>{
+  square.addEventListener("click", function play(){
+    fullGame(square,player1,player2,firstGameBoard,play)
+    console.log(firstGameBoard)
+  })
+});
 
-
-
+//for the reset button, add an event listener
+reset.addEventListener("click",(e)=>{
+  resetGame(player1,player2,firstGameBoard)
+})
 
 
 
@@ -56,7 +48,7 @@ allSquares.forEach((square)=>{
     player2.renderLetter(e.target.id);
     player2.pushLetter(firstGameBoard,e.target.id)
 
-    playGame(firstGameBoard,e.target.id,player1,player2)
+    playerMove(firstGameBoard,e.target.id,player1,player2)
     console.log(firstGameBoard);
 
   })

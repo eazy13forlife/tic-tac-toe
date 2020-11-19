@@ -9,9 +9,30 @@ p,body,h1,h2,h3,h4,h5,ul{
   margin:0px;
   padding:0px;
 }
+/*beginning of entire game container*/
+div.game-container{
+  margin-top:4em;
+  text-align:center;
+}
+h1{
+  text-align:center;
+  font-size:3rem;
+  margin-bottom:14px;
+}
+div.game-container p{
+  font-size:2rem;
+  margin-bottom:14px;
+}
+input#reset{
+  margin-top:14px;
+  font-size:1rem;
+  padding:1em 2em;
+}
+/*end of entire game container*/
 
 
-.grid-container{
+/*beginning of grid-container for each square*/
+div.grid-container{
   display:grid;
   width:400px;
   height:400px;
@@ -21,6 +42,11 @@ p,body,h1,h2,h3,h4,h5,ul{
   grid-template-rows:repeat(3,1fr);
 }
 
-.grid-container div{
+div.grid-container .square{
   border:1px solid black;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:3rem;
 }
+/*end of each grid container*/

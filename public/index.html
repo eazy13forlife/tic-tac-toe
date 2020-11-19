@@ -8,22 +8,30 @@
     <meta charset="utf-8"/>
   </head>
   <body>
-    <h1>Hi</h1>
-    <div class="grid-container">
+    <div class="game-container">
+      <h1>Tic-Tac-Toe</h1>
+      <p id="message"></p>
+      <div class="grid-container"></div>
+      <input type="submit" value="reset" id="reset"/>
+  </div>
 
 
 
 
-    </div>
-
-
-
-
-
-
-
-
-
+<!--
+  const playerMove=(player,gameboard,id)=>{
+    gameboard.gameArray.filter((array)=>{
+      array.forEach((object)=>{
+        return object.id===id;
+      })
+    })
+  }
+  const playerMove=(player,gameboard,id)=>{
+    player.renderLetter(id);
+    player.pushLetter(gameboard,id);
+    player.check3(gameboard);
+  }
+-->
 
 
 
