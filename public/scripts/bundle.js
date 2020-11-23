@@ -15779,11 +15779,15 @@ var _domElements = __webpack_require__(/*! ./domElements.js */ "./source/domElem
 var player1 = void 0;
 var player2 = void 0;
 
-//ask the user for who player 1 is and who player 2 is
-var play1Name = window.prompt("What is player 1's name?");
-var play2Name = window.prompt("What is player 2's name?");
-player1 = (0, _player.returnPlayerObject)(play1Name, "X");
-player2 = (0, _player.returnPlayerObject)(play2Name, "O");
+//ask the user for who player 1 is and who player 2 is UNSHADE THIS
+/*
+const play1Name=window.prompt("What is player 1's name?")
+const play2Name=window.prompt("What is player 2's name?")
+*/
+
+//REMOVE STRINGS FroM Play1Name and play2Name because it will take on variables from above
+player1 = (0, _player.returnPlayerObject)("play1Name", "X");
+player2 = (0, _player.returnPlayerObject)("play2Name", "O");
 
 var firstGameBoard = (0, _gameboard.returnGameBoard)();
 
@@ -15792,7 +15796,7 @@ _domElements.messageEl.textContent = player1.name + ", it's your turn.";
 //for each square,add a click event listener
 _domElements.allSquares.forEach(function (square) {
   square.addEventListener("click", function play() {
-    (0, _playGame.fullGame)(square, player1, player2, firstGameBoard, play);
+    (0, _playGame.fullGameComputer)(square, player1, player2, firstGameBoard, play);
     console.log(firstGameBoard);
   });
 });
@@ -15831,83 +15835,6 @@ allSquares.forEach((square)=>{
 
 "use strict";
 
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.resetGame = exports.messageEl = exports.fullGame = undefined;
-
-var _domElements = __webpack_require__(/*! ./domElements.js */ "./source/domElements.js");
-
-var type = "odd";
-var i = 0;
-
-//function for when a player makes a move
-var playerMove = function playerMove(player, gameboard, id) {
-  var value = gameboard.gameArray.find(function (object) {
-    return object.id === id;
-  });
-  if (value.letter) {
-    //if the letter exists and you're still clicking it, it is still your turn,so we keep the message the same. You just have to click something else.
-    if (type === "odd") {
-      _domElements.messageEl.textContent = player.name + ", its your turn";
-    } else {
-      _domElements.messageEl.textContent = player.name + ", its your turn";
-    }
-  } else {
-    adjustGlobals();
-    player.renderLetter(id);
-    player.pushLetter(gameboard, id);
-    player.check3(gameboard);
-  }
-};
-
-//function to play full game
-var fullGame = function fullGame(item, player1, player2, gameboard) {
-  //if either player1 or player 2 check 3 is correct(has 3 in a row), dont do anything when we click
-  if (player1.check3(gameboard) || player2.check3(gameboard)) {} else if (i === 9) {} else {
-    if (type === "odd") {
-      _domElements.messageEl.textContent = player2.name + ", its your turn";
-      playerMove(player1, gameboard, item.id);
-    } else if (type === "even") {
-      _domElements.messageEl.textContent = player1.name + ", its your turn";
-      playerMove(player2, gameboard, item.id);
-    }
-  }
-};
-
-var adjustGlobals = function adjustGlobals() {
-  //item.removeEventListener("click",functionToRemove);
-  if (type === "even") {
-    type = "odd";
-  } else {
-    type = "even";
-  }
-  i++;
-  if (i === 9) {
-    _domElements.messageEl.textContent = "Tie Game!";
-  }
-};
-
-var resetGame = function resetGame(player1, player2, gameboard) {
-  //first make each letter in the game array equal to null
-  gameboard.gameArray.forEach(function (object) {
-    object.letter = null;
-  });
-  //remove all the textContent from each square
-  var allSquares = document.querySelectorAll(".square");
-  allSquares.forEach(function (square) {
-    square.textContent = "";
-  });
-  //begin with type="odd"(the first person) and i=0(meaning no moves have been made)
-  type = "odd";
-  i = 0;
-  //change the textContent
-  _domElements.messageEl.textContent = player1.name + ", its your turn";
-};
-exports.fullGame = fullGame;
-exports.messageEl = _domElements.messageEl;
-exports.resetGame = resetGame;
 
 /***/ }),
 
