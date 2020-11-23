@@ -15691,6 +15691,33 @@ module.exports = g;
 
 /***/ }),
 
+/***/ "./source/computer.js":
+/*!****************************!*\
+  !*** ./source/computer.js ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.computerMove = undefined;
+
+var _playGame = __webpack_require__(/*! ./playGame.js */ "./source/playGame.js");
+
+var computerMove = function computerMove() {
+  var a = 1;
+  var b = 9;
+  var number = Math.ceil(Math.random() * 8) + a;
+  return "_" + number;
+}; //there are 9 object in our gameArray. Comoputer needs to chooose 1
+exports.computerMove = computerMove;
+
+/***/ }),
+
 /***/ "./source/domElements.js":
 /*!*******************************!*\
   !*** ./source/domElements.js ***!
@@ -15835,6 +15862,133 @@ allSquares.forEach((square)=>{
 
 "use strict";
 
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.fullGameComputer = exports.resetGame = exports.messageEl = exports.fullGame = undefined;
+
+var _domElements = __webpack_require__(/*! ./domElements.js */ "./source/domElements.js");
+
+var _computer = __webpack_require__(/*! ./computer.js */ "./source/computer.js");
+
+//maybe remove player 2 and 1 stuff from playMove functionx
+//tells us who goes first or last
+var type = "odd";
+
+//tell us the number of squares weve clicked. if its 9 and nothing is solved, then its a tie
+var i = 0;
+
+//function for when a player makes a move
+
+var playerMove = function playerMove(player, gameboard, id) {
+  var value = gameboard.gameArray.find(function (object) {
+    return object.id === id;
+  });
+  if (value.letter) {
+    //if the letter exists and you're still clicking it, it is still your turn,so we keep the message the same. You just have to click something else.
+    if (type === "odd") {
+      _domElements.messageEl.textContent = player.name + ", its your turn";
+    } else {
+      _domElements.messageEl.textContent = player.name + ", its your turn";
+    }
+  } else {
+    adjustGlobals();
+    player.renderLetter(id);
+    player.pushLetter(gameboard, id);
+    player.check3(gameboard);
+  }
+};
+
+//function for when a player and computer makes a move
+var playerMoveC = function playerMoveC(player, gameboard, id, secondPlayer) {
+  var value = gameboard.gameArray.find(function (object) {
+    return object.id === id;
+  });
+  console.log(value);
+  if (value.letter) {
+    //if the letter exists and you're still clicking it, it is still your turn,so we keep the message the same. You just have to click something else.
+    if (type === "odd") {
+      _domElements.messageEl.textContent = player.name + ", its your turn";
+    } else {
+      _domElements.messageEl.textContent = player.name + ", its your turn";
+      playerMoveC(player, gameboard, (0, _computer.computerMove)());
+    }
+  } else {
+    adjustGlobals();
+    player.renderLetter(id);
+    player.pushLetter(gameboard, id);
+    player.check3(gameboard);
+  }
+};
+
+//function to play full game
+var fullGame = function fullGame(item, player1, player2, gameboard) {
+  //if either player1 or player 2 check 3 is correct(has 3 in a row), dont do anything when we click
+  if (player1.check3(gameboard) || player2.check3(gameboard)) {} else if (i === 9) {} else {
+    if (type === "odd") {
+      //if odd automatically say players 2 name and then player 1 will make their choice. If player 1 ennds up clicking something that they cant, playerMove() will change message to players 1 turn still. This is why we place the message before playerMove, so that playerMove can change it in case player 1 clicks the same thing
+      _domElements.messageEl.textContent = player2.name + ", its your turn";
+      playerMove(player1, gameboard, item.id);
+    } else if (type === "even") {
+      _domElements.messageEl.textContent = player1.name + ", its your turn";
+      playerMove(player2, gameboard, item.id);
+    }
+  }
+};
+
+var fullGameComputer = function fullGameComputer(item, player1, player2, gameboard) {
+  //if either player1 or player 2 check 3 is correct(has 3 in a row), dont do anything when we click
+  if (player1.check3(gameboard) || player2.check3(gameboard)) {} else if (i === 9) {} else {
+    if (type === "odd") {
+      _domElements.messageEl.textContent = player2.name + ", its your turn";
+      playerMoveC(player1, gameboard, item.id, player2);
+    }
+
+    if (type === "even") {
+      //before computer makes a move, we have to see if game is a tie or someone won. We didnt have to do this before because everytime we clicked a square the game would check to see if someone had won or tied. But because with computer we are not clicking, we have to do run it again,before it does.
+      if (player1.check3(gameboard) || player2.check3(gameboard)) {} else if (i === 9) {} else {
+        _domElements.messageEl.textContent = player1.name + ", its your turn";
+        playerMoveC(player2, gameboard, (0, _computer.computerMove)(), player1);
+      }
+      console.log(type);
+    }
+  }
+};
+
+var adjustGlobals = function adjustGlobals() {
+  //item.removeEventListener("click",functionToRemove);
+  if (type === "even") {
+    type = "odd";
+  } else {
+    type = "even";
+  }
+  i++;
+  if (i === 9) {
+    _domElements.messageEl.textContent = "Tie Game!";
+  }
+};
+
+var resetGame = function resetGame(player1, player2, gameboard) {
+  //first make each letter in the game array equal to null
+  gameboard.gameArray.forEach(function (object) {
+    object.letter = null;
+  });
+  //remove all the textContent from each square
+  var allSquares = document.querySelectorAll(".square");
+  allSquares.forEach(function (square) {
+    square.textContent = "";
+  });
+  //begin with type="odd"(the first person) and i=0(meaning no moves have been made)
+  type = "odd";
+  i = 0;
+  //change the textContent
+  _domElements.messageEl.textContent = player1.name + ", its your turn";
+};
+exports.fullGame = fullGame;
+exports.messageEl = _domElements.messageEl;
+exports.resetGame = resetGame;
+exports.fullGameComputer = fullGameComputer;
 
 /***/ }),
 
