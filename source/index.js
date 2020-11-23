@@ -24,7 +24,7 @@ messageEl.textContent=`${player1.name}, it's your turn.`
 //for each square,add a click event listener
 allSquares.forEach((square)=>{
   square.addEventListener("click", function play(){
-    fullGameComputer(square,player1,player2,firstGameBoard,play)
+    fullGameComputer(square,player1,player2,firstGameBoard)
     console.log(firstGameBoard)
   })
 });

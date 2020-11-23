@@ -17,9 +17,9 @@ const playerMove=(player,gameboard,id)=>{
   if(value.letter){
     //if the letter exists and you're still clicking it, it is still your turn,so we keep the message the same. You just have to click something else.
     if(type==="odd"){
-      messageEl.textContent=`${player.name}, its your turn`;
+      messageEl.textContent=`${player.name}, choose another square.`;
     }else{
-      messageEl.textContent=`${player.name}, its your turn`;
+      messageEl.textContent=`${player.name}, choose another square.`;
     }
   }else{
     adjustGlobals();
@@ -32,6 +32,7 @@ const playerMove=(player,gameboard,id)=>{
 
 //function for when a player and computer makes a move
 const playerMoveC=(player,gameboard,id,secondPlayer)=>{
+        console.log(secondPlayer.name)
   const value=gameboard.gameArray.find((object)=>{
     return object.id===id;
   })
@@ -39,10 +40,11 @@ const playerMoveC=(player,gameboard,id,secondPlayer)=>{
   if(value.letter){
     //if the letter exists and you're still clicking it, it is still your turn,so we keep the message the same. You just have to click something else.
     if(type==="odd"){
-      messageEl.textContent=`${player.name}, its your turn`;
+      messageEl.textContent=`${player.name}, choose another square`;
     }else{
-  
+
       playerMoveC(player,gameboard,computerMove());
+
     }
   }else{
     adjustGlobals();
@@ -82,7 +84,7 @@ const fullGame=(item,player1,player2,gameboard)=>{
 
     }else{
       if(type==="odd"){
-        messageEl.textContent=`${player2.name}, its your turn`
+
         playerMoveC(player1,gameboard,item.id,player2);
       }
 
@@ -94,7 +96,7 @@ const fullGame=(item,player1,player2,gameboard)=>{
         }else if(i===9){
 
         }else{
-        messageEl.textContent=`${player1.name}, its your turn`
+          messageEl.textContent=`${player1.name},its your turn.`
         playerMoveC(player2,gameboard,computerMove(),player1);
       }
       console.log(type)

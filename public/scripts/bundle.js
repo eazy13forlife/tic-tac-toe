@@ -15823,7 +15823,7 @@ _domElements.messageEl.textContent = player1.name + ", it's your turn.";
 //for each square,add a click event listener
 _domElements.allSquares.forEach(function (square) {
   square.addEventListener("click", function play() {
-    (0, _playGame.fullGameComputer)(square, player1, player2, firstGameBoard, play);
+    (0, _playGame.fullGameComputer)(square, player1, player2, firstGameBoard);
     console.log(firstGameBoard);
   });
 });
@@ -15888,9 +15888,9 @@ var playerMove = function playerMove(player, gameboard, id) {
   if (value.letter) {
     //if the letter exists and you're still clicking it, it is still your turn,so we keep the message the same. You just have to click something else.
     if (type === "odd") {
-      _domElements.messageEl.textContent = player.name + ", its your turn";
+      _domElements.messageEl.textContent = player.name + ", choose another square.";
     } else {
-      _domElements.messageEl.textContent = player.name + ", its your turn";
+      _domElements.messageEl.textContent = player.name + ", choose another square.";
     }
   } else {
     adjustGlobals();
@@ -15902,6 +15902,7 @@ var playerMove = function playerMove(player, gameboard, id) {
 
 //function for when a player and computer makes a move
 var playerMoveC = function playerMoveC(player, gameboard, id, secondPlayer) {
+  console.log(secondPlayer.name);
   var value = gameboard.gameArray.find(function (object) {
     return object.id === id;
   });
@@ -15909,7 +15910,7 @@ var playerMoveC = function playerMoveC(player, gameboard, id, secondPlayer) {
   if (value.letter) {
     //if the letter exists and you're still clicking it, it is still your turn,so we keep the message the same. You just have to click something else.
     if (type === "odd") {
-      _domElements.messageEl.textContent = player.name + ", its your turn";
+      _domElements.messageEl.textContent = player.name + ", choose another square";
     } else {
 
       playerMoveC(player, gameboard, (0, _computer.computerMove)());
@@ -15941,14 +15942,14 @@ var fullGameComputer = function fullGameComputer(item, player1, player2, gameboa
   //if either player1 or player 2 check 3 is correct(has 3 in a row), dont do anything when we click
   if (player1.check3(gameboard) || player2.check3(gameboard)) {} else if (i === 9) {} else {
     if (type === "odd") {
-      _domElements.messageEl.textContent = player2.name + ", its your turn";
+
       playerMoveC(player1, gameboard, item.id, player2);
     }
 
     if (type === "even") {
       //before computer makes a move, we have to see if game is a tie or someone won. We didnt have to do this before because everytime we clicked a square the game would check to see if someone had won or tied. But because with computer we are not clicking, we have to do run it again,before it does.
       if (player1.check3(gameboard) || player2.check3(gameboard)) {} else if (i === 9) {} else {
-        _domElements.messageEl.textContent = player1.name + ", its your turn";
+        _domElements.messageEl.textContent = player1.name + ",its your turn.";
         playerMoveC(player2, gameboard, (0, _computer.computerMove)(), player1);
       }
       console.log(type);
