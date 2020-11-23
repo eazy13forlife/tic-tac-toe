@@ -15911,7 +15911,7 @@ var playerMoveC = function playerMoveC(player, gameboard, id, secondPlayer) {
     if (type === "odd") {
       _domElements.messageEl.textContent = player.name + ", its your turn";
     } else {
-      _domElements.messageEl.textContent = player.name + ", its your turn";
+
       playerMoveC(player, gameboard, (0, _computer.computerMove)());
     }
   } else {

@@ -41,7 +41,7 @@ const playerMoveC=(player,gameboard,id,secondPlayer)=>{
     if(type==="odd"){
       messageEl.textContent=`${player.name}, its your turn`;
     }else{
-      messageEl.textContent=`${player.name}, its your turn`;
+  
       playerMoveC(player,gameboard,computerMove());
     }
   }else{
