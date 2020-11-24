@@ -15745,10 +15745,20 @@ var reset = document.querySelector("#reset");
 var allSquares = document.querySelectorAll(".square");
 var messageEl = document.querySelector("#message");
 
+var playerButton = document.querySelector("#another_player");
+var computerButton = document.querySelector("#computer");
+
+var gameContainerEl = document.querySelector(".game-container");
+var homePageEl = document.querySelector(".home-page");
+
 console.log(allSquares);
 exports.reset = reset;
 exports.allSquares = allSquares;
 exports.messageEl = messageEl;
+exports.playerButton = playerButton;
+exports.computerButton = computerButton;
+exports.gameContainerEl = gameContainerEl;
+exports.homePageEl = homePageEl;
 
 /***/ }),
 
@@ -15794,6 +15804,11 @@ exports.returnGameBoard = returnGameBoard;
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.computer = undefined;
+
 var _gameboard = __webpack_require__(/*! ./gameboard.js */ "./source/gameboard.js");
 
 var _player = __webpack_require__(/*! ./player.js */ "./source/player.js");
@@ -15802,29 +15817,36 @@ var _playGame = __webpack_require__(/*! ./playGame.js */ "./source/playGame.js")
 
 var _domElements = __webpack_require__(/*! ./domElements.js */ "./source/domElements.js");
 
-//initially,set player1 and player2 equal to nothing
-var player1 = void 0;
-var player2 = void 0;
-
-//ask the user for who player 1 is and who player 2 is UNSHADE THIS
-/*
-const play1Name=window.prompt("What is player 1's name?")
-const play2Name=window.prompt("What is player 2's name?")
-*/
-
-//REMOVE STRINGS FroM Play1Name and play2Name because it will take on variables from above
-player1 = (0, _player.returnPlayerObject)("play1Name", "X");
-player2 = (0, _player.returnPlayerObject)("play2Name", "O");
-
+//create the gameboard
 var firstGameBoard = (0, _gameboard.returnGameBoard)();
 
+//initially,set player1 and player2 and computer equal to what they are
+var player1 = (0, _player.returnPlayerObject)("Player 1", "X");
+var player2 = (0, _player.returnPlayerObject)("Player 2", "X");
+var computer = (0, _player.returnPlayerObject)("Computer", "O");
+
+//set the title to player 1, its your turn,because player 1 begins first each time
 _domElements.messageEl.textContent = player1.name + ", it's your turn.";
 
-//for each square,add a click event listener
-_domElements.allSquares.forEach(function (square) {
-  square.addEventListener("click", function play() {
-    (0, _playGame.fullGameComputer)(square, player1, player2, firstGameBoard);
-    console.log(firstGameBoard);
+//when we click the another player button;
+_domElements.playerButton.addEventListener("click", function (e) {
+  _domElements.homePageEl.setAttribute("style", "display:none;");
+  _domElements.gameContainerEl.setAttribute("style", "display:block;");
+  _domElements.allSquares.forEach(function (square) {
+    square.addEventListener("click", function play() {
+      (0, _playGame.fullGame)(square, player1, player2, firstGameBoard); //dont forget to change computer to player 2
+    });
+  });
+});
+
+//when we click the computer button;
+_domElements.computerButton.addEventListener("click", function (e) {
+  _domElements.homePageEl.setAttribute("style", "display:none;");
+  _domElements.gameContainerEl.setAttribute("style", "display:block;");
+  _domElements.allSquares.forEach(function (square) {
+    square.addEventListener("click", function play() {
+      (0, _playGame.fullGameComputer)(square, player1, computer, firstGameBoard); //dont forget to change computer to player 2
+    });
   });
 });
 
@@ -15832,6 +15854,8 @@ _domElements.allSquares.forEach(function (square) {
 _domElements.reset.addEventListener("click", function (e) {
   (0, _playGame.resetGame)(player1, player2, firstGameBoard);
 });
+
+exports.computer = computer;
 
 /*
 const allSquares=document.querySelectorAll(".square")
@@ -15872,6 +15896,8 @@ var _domElements = __webpack_require__(/*! ./domElements.js */ "./source/domElem
 
 var _computer = __webpack_require__(/*! ./computer.js */ "./source/computer.js");
 
+var _index = __webpack_require__(/*! ./index.js */ "./source/index.js");
+
 //maybe remove player 2 and 1 stuff from playMove functionx
 //tells us who goes first or last
 var type = "odd";
@@ -15886,34 +15912,17 @@ var playerMove = function playerMove(player, gameboard, id) {
     return object.id === id;
   });
   if (value.letter) {
-    //if the letter exists and you're still clicking it, it is still your turn,so we keep the message the same. You just have to click something else.
+    //if the letter exists and you're clicking it as player1(who is always odd), it is still your turn,so we make the message "whatever your name is", choose another square
     if (type === "odd") {
       _domElements.messageEl.textContent = player.name + ", choose another square.";
     } else {
-      _domElements.messageEl.textContent = player.name + ", choose another square.";
-    }
-  } else {
-    adjustGlobals();
-    player.renderLetter(id);
-    player.pushLetter(gameboard, id);
-    player.check3(gameboard);
-  }
-};
-
-//function for when a player and computer makes a move
-var playerMoveC = function playerMoveC(player, gameboard, id) {
-
-  var value = gameboard.gameArray.find(function (object) {
-    return object.id === id;
-  });
-  console.log(value);
-  if (value.letter) {
-    //if the letter exists and you're still clicking it, it is still your turn,so we keep the message the same. You just have to click something else.
-    if (type === "odd") {
-      _domElements.messageEl.textContent = player.name + ", choose another square";
-    } else {
-
-      playerMoveC(player, gameboard, (0, _computer.computerMove)());
+      //if its even,and a computer, the computer just makes another move.No need for a message to display
+      if (arguments[0] === _index.computer) {
+        playerMove(player, gameboard, (0, _computer.computerMove)());
+        //if its even and not a computer,we say "whatever your name is",choose another square
+      } else {
+        _domElements.messageEl.textContent = player.name + ", choose another square.";
+      }
     }
   } else {
     adjustGlobals();
@@ -15925,6 +15934,7 @@ var playerMoveC = function playerMoveC(player, gameboard, id) {
 
 //function to play full game
 var fullGame = function fullGame(item, player1, player2, gameboard) {
+  console.log(type);
   //if either player1 or player 2 check 3 is correct(has 3 in a row), dont do anything when we click
   if (player1.check3(gameboard) || player2.check3(gameboard)) {} else if (i === 9) {} else {
     if (type === "odd") {
@@ -15942,19 +15952,15 @@ var fullGameComputer = function fullGameComputer(item, player1, player2, gameboa
   //if either player1 or player 2 check 3 is correct(has 3 in a row), dont do anything when we click
   if (player1.check3(gameboard) || player2.check3(gameboard)) {} else if (i === 9) {} else {
     if (type === "odd") {
-
-      playerMoveC(player1, gameboard, item.id);
+      _domElements.messageEl.textContent = player1.name + ",its your turn.";
+      playerMove(player1, gameboard, item.id);
     }
-
     if (type === "even") {
-
       //before computer makes a move, we have to see if game is a tie or someone won. We didnt have to do this before because everytime we clicked a square the game would check to see if someone had won or tied. But because with computer we are not clicking, we have to do run it again,before it does.
       if (player1.check3(gameboard) || player2.check3(gameboard)) {} else if (i === 9) {} else {
         _domElements.messageEl.textContent = player1.name + ",its your turn.";
-
-        playerMoveC(player2, gameboard, (0, _computer.computerMove)());
+        playerMove(player2, gameboard, (0, _computer.computerMove)());
       }
-      console.log(type);
     }
   }
 };

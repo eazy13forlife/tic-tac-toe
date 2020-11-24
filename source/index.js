@@ -1,33 +1,42 @@
 import{returnGameBoard}from"./gameboard.js"
 import{returnPlayerObject} from "./player.js"
 import{fullGame,resetGame,fullGameComputer} from "./playGame.js";
-import{allSquares,reset,messageEl}from "./domElements.js"
+import{allSquares,reset,messageEl,playerButton,computerButton,gameContainerEl,homePageEl}from "./domElements.js"
 
-//initially,set player1 and player2 equal to nothing
-let player1;
-let player2;
 
-//ask the user for who player 1 is and who player 2 is UNSHADE THIS
-/*
-const play1Name=window.prompt("What is player 1's name?")
-const play2Name=window.prompt("What is player 2's name?")
-*/
-
-//REMOVE STRINGS FroM Play1Name and play2Name because it will take on variables from above
- player1=returnPlayerObject("play1Name","X");
- player2=returnPlayerObject("play2Name","O")
-
+//create the gameboard
 const firstGameBoard=returnGameBoard();
 
+//initially,set player1 and player2 and computer equal to what they are
+let player1=returnPlayerObject("Player 1","X");
+let player2=returnPlayerObject("Player 2","X");
+const computer=returnPlayerObject("Computer","O")
+
+//set the title to player 1, its your turn,because player 1 begins first each time
 messageEl.textContent=`${player1.name}, it's your turn.`
 
-//for each square,add a click event listener
-allSquares.forEach((square)=>{
-  square.addEventListener("click", function play(){
-    fullGameComputer(square,player1,player2,firstGameBoard)
-    console.log(firstGameBoard)
+//when we click the another player button;
+playerButton.addEventListener("click",(e)=>{
+  homePageEl.setAttribute("style","display:none;")
+  gameContainerEl.setAttribute("style","display:block;");
+  allSquares.forEach((square)=>{
+    square.addEventListener("click", function play(){
+      fullGame(square,player1,player2,firstGameBoard)//dont forget to change computer to player 2
+    })
   })
-});
+})
+
+//when we click the computer button;
+computerButton.addEventListener("click",(e)=>{
+  homePageEl.setAttribute("style","display:none;")
+  gameContainerEl.setAttribute("style","display:block;");
+  allSquares.forEach((square)=>{
+    square.addEventListener("click", function play(){
+      fullGameComputer(square,player1,computer,firstGameBoard)//dont forget to change computer to player 2
+    })
+  })
+})
+
 
 //for the reset button, add an event listener
 reset.addEventListener("click",(e)=>{
@@ -39,7 +48,7 @@ reset.addEventListener("click",(e)=>{
 
 
 
-
+export{computer}
 
 /*
 const allSquares=document.querySelectorAll(".square")

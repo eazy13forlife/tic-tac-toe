@@ -24,9 +24,23 @@ body{
   height:100vh;
 
 }
+/*Beginning of homepage container*/
+div.home-page{
+  text-align:center;
+}
+div.home-page p{
+  font-size:1.7rem;
+}
+div.home-page input:nth-of-type(2){
+  margin-left:1em;
+}
+/*end of homepage container*/
+
+
 /*beginning of entire game container*/
 div.game-container{
   text-align:center;
+  display:none;
 }
 h1{
   text-align:center;
@@ -39,7 +53,7 @@ div.game-container p{
   font-size:2rem;
 
 }
-input#reset{
+input{
   margin-top:1em;
   font-size:1.5rem;
   padding:0.5em 1em;
@@ -48,7 +62,7 @@ input#reset{
   color:white;
   font-family: 'Architects Daughter', cursive
 }
-input#reset:hover{
+input:hover{
   border-color:white;
   background-color:white;
   color:black;

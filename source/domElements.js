@@ -12,5 +12,11 @@ const reset=document.querySelector("#reset");
 const allSquares=document.querySelectorAll(".square");
 const messageEl=document.querySelector("#message")
 
+const playerButton=document.querySelector("#another_player");
+const computerButton=document.querySelector("#computer")
+
+const gameContainerEl=document.querySelector(".game-container");
+const homePageEl=document.querySelector(".home-page")
+
 console.log(allSquares)
-export{reset,allSquares,messageEl}
+export{reset,allSquares,messageEl,playerButton,computerButton,gameContainerEl,homePageEl}
