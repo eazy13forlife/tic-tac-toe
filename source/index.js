@@ -1,6 +1,6 @@
 import{returnGameBoard}from"./gameboard.js"
 import{returnPlayerObject} from "./player.js"
-import{playerMove,fullGame,resetGame,fullGameComputer} from "./playGame.js";
+import{fullGame,resetGame,fullGameComputer} from "./playGame.js";
 import{allSquares,reset,messageEl}from "./domElements.js"
 
 //initially,set player1 and player2 equal to nothing

@@ -31,8 +31,8 @@ const playerMove=(player,gameboard,id)=>{
 
 
 //function for when a player and computer makes a move
-const playerMoveC=(player,gameboard,id,secondPlayer)=>{
-        console.log(secondPlayer.name)
+const playerMoveC=(player,gameboard,id)=>{
+
   const value=gameboard.gameArray.find((object)=>{
     return object.id===id;
   })
@@ -85,11 +85,13 @@ const fullGame=(item,player1,player2,gameboard)=>{
     }else{
       if(type==="odd"){
 
-        playerMoveC(player1,gameboard,item.id,player2);
+        playerMoveC(player1,gameboard,item.id);
       }
 
 
       if(type==="even"){
+
+
         //before computer makes a move, we have to see if game is a tie or someone won. We didnt have to do this before because everytime we clicked a square the game would check to see if someone had won or tied. But because with computer we are not clicking, we have to do run it again,before it does.
         if(player1.check3(gameboard)||player2.check3(gameboard)){
 
@@ -97,7 +99,8 @@ const fullGame=(item,player1,player2,gameboard)=>{
 
         }else{
           messageEl.textContent=`${player1.name},its your turn.`
-        playerMoveC(player2,gameboard,computerMove(),player1);
+
+        playerMoveC(player2,gameboard,computerMove());
       }
       console.log(type)
     }
