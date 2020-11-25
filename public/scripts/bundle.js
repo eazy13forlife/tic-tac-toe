@@ -15750,6 +15750,7 @@ var computerButton = document.querySelector("#computer");
 
 var gameContainerEl = document.querySelector(".game-container");
 var homePageEl = document.querySelector(".home-page");
+var goBackEl = document.querySelector("#go_back");
 
 console.log(allSquares);
 exports.reset = reset;
@@ -15759,6 +15760,7 @@ exports.playerButton = playerButton;
 exports.computerButton = computerButton;
 exports.gameContainerEl = gameContainerEl;
 exports.homePageEl = homePageEl;
+exports.goBackEl = goBackEl;
 
 /***/ }),
 
@@ -15822,31 +15824,40 @@ var firstGameBoard = (0, _gameboard.returnGameBoard)();
 
 //initially,set player1 and player2 and computer equal to what they are
 var player1 = (0, _player.returnPlayerObject)("Player 1", "X");
-var player2 = (0, _player.returnPlayerObject)("Player 2", "X");
-var computer = (0, _player.returnPlayerObject)("Computer", "O");
+var player2 = (0, _player.returnPlayerObject)("Player 2", "0");
+var computer = (0, _player.returnPlayerObject)("Computer", "0");
 
 //set the title to player 1, its your turn,because player 1 begins first each time
-_domElements.messageEl.textContent = player1.name + ", it's your turn.";
+_domElements.messageEl.textContent = player1.name + ", its your turn";
+
+var compSelect = null;
+var playerSelect = null;
+
+var playPlayer = function playPlayer(e) {
+  (0, _playGame.fullGame)(e.target, player1, player2, firstGameBoard);
+};
+
+var playComputer = function playComputer(e) {
+  (0, _playGame.fullGameComputer)(e.target, player1, computer, firstGameBoard);
+};
 
 //when we click the another player button;
 _domElements.playerButton.addEventListener("click", function (e) {
+  playerSelect = true;
   _domElements.homePageEl.setAttribute("style", "display:none;");
   _domElements.gameContainerEl.setAttribute("style", "display:block;");
   _domElements.allSquares.forEach(function (square) {
-    square.addEventListener("click", function play() {
-      (0, _playGame.fullGame)(square, player1, player2, firstGameBoard); //dont forget to change computer to player 2
-    });
+    square.addEventListener("click", playPlayer); //dont forget to change computer to player 2
   });
 });
 
 //when we click the computer button;
 _domElements.computerButton.addEventListener("click", function (e) {
+  compSelect = true;
   _domElements.homePageEl.setAttribute("style", "display:none;");
   _domElements.gameContainerEl.setAttribute("style", "display:block;");
   _domElements.allSquares.forEach(function (square) {
-    square.addEventListener("click", function play() {
-      (0, _playGame.fullGameComputer)(square, player1, computer, firstGameBoard); //dont forget to change computer to player 2
-    });
+    square.addEventListener("click", playComputer);
   });
 });
 
@@ -15854,26 +15865,24 @@ _domElements.computerButton.addEventListener("click", function (e) {
 _domElements.reset.addEventListener("click", function (e) {
   (0, _playGame.resetGame)(player1, player2, firstGameBoard);
 });
+console.log('hi');
+//when we click the go back button
+_domElements.goBackEl.addEventListener("click", function (e) {
+  (0, _playGame.resetGame)(player1, player2, firstGameBoard);
+  _domElements.allSquares.forEach(function (square) {
+    if (playerSelect) {
+      square.removeEventListener("click", playPlayer);
+      playerSelect = false;
+    } else {
+      square.removeEventListener("click", playComputer);
+      compSelect = false;
+    }
+  });
+  _domElements.gameContainerEl.setAttribute("style", "display:none");
+  _domElements.homePageEl.setAttribute("style", "display:block");
+});
 
 exports.computer = computer;
-
-/*
-const allSquares=document.querySelectorAll(".square")
-allSquares.forEach((square)=>{
-  square.addEventListener("click",(e)=>{
-    player1.renderLetter(e.target.id)
-    player1.pushLetter(firstGameBoard,e.target.id);
-    player1.check3(firstGameBoard);
-    /*
-    player2.renderLetter(e.target.id);
-    player2.pushLetter(firstGameBoard,e.target.id)
-
-    playerMove(firstGameBoard,e.target.id,player1,player2)
-    console.log(firstGameBoard);
-
-  })
-})
-*/
 
 /***/ }),
 

@@ -17,6 +17,7 @@ const computerButton=document.querySelector("#computer")
 
 const gameContainerEl=document.querySelector(".game-container");
 const homePageEl=document.querySelector(".home-page")
+const goBackEl=document.querySelector("#go_back")
 
 console.log(allSquares)
-export{reset,allSquares,messageEl,playerButton,computerButton,gameContainerEl,homePageEl}
+export{reset,allSquares,messageEl,playerButton,computerButton,gameContainerEl,homePageEl,goBackEl}
