@@ -15911,11 +15911,7 @@ var _index = __webpack_require__(/*! ./index.js */ "./source/index.js");
 //tells us who goes first or last
 var type = "odd";
 
-//tell us the number of squares weve clicked. if its 9 and nothing is solved, then its a tie
-var i = 0;
-
 //function for when a player makes a move
-
 var playerMove = function playerMove(player, gameboard, id) {
   var value = gameboard.gameArray.find(function (object) {
     return object.id === id;
@@ -15945,7 +15941,7 @@ var playerMove = function playerMove(player, gameboard, id) {
 var fullGame = function fullGame(item, player1, player2, gameboard) {
   console.log(type);
   //if either player1 or player 2 check 3 is correct(has 3 in a row), dont do anything when we click
-  if (player1.check3(gameboard) || player2.check3(gameboard)) {} else if (i === 9) {} else {
+  if (checkConditions(player1, player2, gameboard)) {} else {
     if (type === "odd") {
       //if odd automatically say players 2 name and then player 1 will make their choice. If player 1 ennds up clicking something that they cant, playerMove() will change message to players 1 turn still. This is why we place the message before playerMove, so that playerMove can change it in case player 1 clicks the same thing
       _domElements.messageEl.textContent = player2.name + ", its your turn";
@@ -15959,14 +15955,14 @@ var fullGame = function fullGame(item, player1, player2, gameboard) {
 
 var fullGameComputer = function fullGameComputer(item, player1, player2, gameboard) {
   //if either player1 or player 2 check 3 is correct(has 3 in a row), dont do anything when we click
-  if (player1.check3(gameboard) || player2.check3(gameboard)) {} else if (i === 9) {} else {
+  if (checkConditions(player1, player2, gameboard)) {} else {
     if (type === "odd") {
       _domElements.messageEl.textContent = player1.name + ", its your turn.";
       playerMove(player1, gameboard, item.id);
     }
     if (type === "even") {
       //before computer makes a move, we have to see if game is a tie or someone won. We didnt have to do this before because everytime we clicked a square the game would check to see if someone had won or tied. But because with computer we are not clicking, we have to do run it again,before it does.
-      if (player1.check3(gameboard) || player2.check3(gameboard)) {} else if (i === 9) {} else {
+      if (checkConditions(player1, player2, gameboard)) {} else {
         _domElements.messageEl.textContent = player1.name + ", its your turn.";
         playerMove(player2, gameboard, (0, _computer.computerMove)());
       }
@@ -15974,16 +15970,22 @@ var fullGameComputer = function fullGameComputer(item, player1, player2, gameboa
   }
 };
 
+//function that checks to see if any player has tied or won the game yet. Returns true if so
+var checkConditions = function checkConditions(player1, player2, gameboard) {
+  player1 = player1.check3(gameboard);
+  player2 = player2.check3(gameboard);
+  if (player1 === true || player1 === "tie" || player2 === true || player2 === "tie") {
+    return true;
+  }
+};
+
+//function that changes players turn from off(player1) to even(player 2 or computer) and vice versa
 var adjustGlobals = function adjustGlobals() {
   //item.removeEventListener("click",functionToRemove);
   if (type === "even") {
     type = "odd";
   } else {
     type = "even";
-  }
-  i++;
-  if (i === 9) {
-    _domElements.messageEl.textContent = "Tie Game!";
   }
 };
 
@@ -15999,7 +16001,6 @@ var resetGame = function resetGame(player1, player2, gameboard) {
   });
   //begin with type="odd"(the first person) and i=0(meaning no moves have been made)
   type = "odd";
-  i = 0;
   //change the textContent
   _domElements.messageEl.textContent = player1.name + ", make your move.";
 };
@@ -16035,7 +16036,7 @@ var returnPlayerObject = function returnPlayerObject(name, letter) {
     name: name,
     letter: letter
     //we return an object with the initial object, along with all of the functions that return a method that we want used in our object.
-  };return _extends({}, initialObject, renderLetterF(), pushLetterF(), check3F(), displayMessageF(), filterSetF());
+  };return _extends({}, initialObject, renderLetterF(), pushLetterF(), check3F(), displayWinMessageF(), filterSetF(), checkAllSelectedF(), displayTieMessageF());
 };
 //function that renders the letter(x or o) to the screen when a player clicks a square
 var renderLetterF = function renderLetterF() {
@@ -16073,18 +16074,31 @@ var check3F = function check3F() {
       var set7 = this.filterSet(gameboard, "_1", "_5", "_9");
       var set8 = this.filterSet(gameboard, "_3", "_5", "_7");
       if (set1 || set2 || set3 || set4 || set5 || set6 || set7 || set8) {
-        this.displayMessage();
+        this.displayWinMessage();
         return true;
-      } else {
-        console.log("hello");
+      } else if (this.checkAllSelected(gameboard)) {
+        this.displayTieMessage();
+        return "tie";
       }
     }
   };
 };
 
-var displayMessageF = function displayMessageF() {
+//function that checks to see if all squares have been clicked on
+var checkAllSelectedF = function checkAllSelectedF() {
   return {
-    displayMessage: function displayMessage() {
+    checkAllSelected: function checkAllSelected(gameboard) {
+      var allSelected = gameboard.gameArray.every(function (object) {
+        return object.letter;
+      });
+      return allSelected;
+    }
+  };
+};
+
+var displayWinMessageF = function displayWinMessageF() {
+  return {
+    displayWinMessage: function displayWinMessage() {
       _playGame.messageEl.textContent = this.name + " won!";
     }
   };
@@ -16101,6 +16115,14 @@ var filterSetF = function filterSetF() {
       return set.every(function (object) {
         return object.letter === _this.letter;
       });
+    }
+  };
+};
+
+var displayTieMessageF = function displayTieMessageF() {
+  return {
+    displayTieMessage: function displayTieMessage() {
+      _playGame.messageEl.textContent = "Tie game";
     }
   };
 };

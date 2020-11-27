@@ -12,8 +12,10 @@ const returnPlayerObject=(name,letter)=>{
     ...renderLetterF(),
     ...pushLetterF(),
     ...check3F(),
-    ...displayMessageF(),
+    ...displayWinMessageF(),
     ...filterSetF(),
+    ...checkAllSelectedF(),
+    ...displayTieMessageF(),
 
   }
 }
@@ -53,11 +55,24 @@ const check3F=()=>{
       const set7=this.filterSet(gameboard,"_1","_5","_9");
       const set8=this.filterSet(gameboard,"_3","_5","_7");
       if(set1||set2||set3||set4||set5||set6||set7||set8){
-        this.displayMessage();
+        this.displayWinMessage();
         return true;
-      }else{
-        console.log("hello")
+      }else if(this.checkAllSelected(gameboard)){
+        this.displayTieMessage();
+        return "tie"
       }
+    }
+  }
+}
+
+//function that checks to see if all squares have been clicked on
+const checkAllSelectedF=()=>{
+  return{
+    checkAllSelected(gameboard){
+      const  allSelected=gameboard.gameArray.every((object)=>{
+        return object.letter
+      })
+      return allSelected;
     }
   }
 }
@@ -65,10 +80,9 @@ const check3F=()=>{
 
 
 
-
-const displayMessageF=()=>{
+const displayWinMessageF=()=>{
   return{
-    displayMessage(){
+    displayWinMessage(){
       messageEl.textContent=`${this.name} won!`;
     }
   }
@@ -87,7 +101,13 @@ const filterSetF=()=>{
   }
 }
 
-
+const displayTieMessageF=()=>{
+  return{
+    displayTieMessage(){
+      messageEl.textContent=`Tie game`;
+    }
+  }
+}
 
 const filterSemt=(gameboard,firstId,secondId,thirdId)=>{
   gameboard.gameArray
