@@ -15828,7 +15828,7 @@ var player2 = (0, _player.returnPlayerObject)("Player 2", "0");
 var computer = (0, _player.returnPlayerObject)("Computer", "0");
 
 //set the title to player 1, its your turn,because player 1 begins first each time
-_domElements.messageEl.textContent = player1.name + ", its your turn";
+_domElements.messageEl.textContent = player1.name + ", make your move";
 
 var compSelect = null;
 var playerSelect = null;
@@ -15847,7 +15847,7 @@ _domElements.playerButton.addEventListener("click", function (e) {
   _domElements.homePageEl.setAttribute("style", "display:none;");
   _domElements.gameContainerEl.setAttribute("style", "display:block;");
   _domElements.allSquares.forEach(function (square) {
-    square.addEventListener("click", playPlayer); //dont forget to change computer to player 2
+    square.addEventListener("click", playPlayer);
   });
 });
 
@@ -15961,13 +15961,13 @@ var fullGameComputer = function fullGameComputer(item, player1, player2, gameboa
   //if either player1 or player 2 check 3 is correct(has 3 in a row), dont do anything when we click
   if (player1.check3(gameboard) || player2.check3(gameboard)) {} else if (i === 9) {} else {
     if (type === "odd") {
-      _domElements.messageEl.textContent = player1.name + ",its your turn.";
+      _domElements.messageEl.textContent = player1.name + ", its your turn.";
       playerMove(player1, gameboard, item.id);
     }
     if (type === "even") {
       //before computer makes a move, we have to see if game is a tie or someone won. We didnt have to do this before because everytime we clicked a square the game would check to see if someone had won or tied. But because with computer we are not clicking, we have to do run it again,before it does.
       if (player1.check3(gameboard) || player2.check3(gameboard)) {} else if (i === 9) {} else {
-        _domElements.messageEl.textContent = player1.name + ",its your turn.";
+        _domElements.messageEl.textContent = player1.name + ", its your turn.";
         playerMove(player2, gameboard, (0, _computer.computerMove)());
       }
     }
@@ -16001,7 +16001,7 @@ var resetGame = function resetGame(player1, player2, gameboard) {
   type = "odd";
   i = 0;
   //change the textContent
-  _domElements.messageEl.textContent = player1.name + ", its your turn";
+  _domElements.messageEl.textContent = player1.name + ", make your move.";
 };
 exports.fullGame = fullGame;
 exports.messageEl = _domElements.messageEl;

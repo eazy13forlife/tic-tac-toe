@@ -59,7 +59,7 @@ const fullGame=(item,player1,player2,gameboard)=>{
     }else if(i===9){
     }else{
       if(type==="odd"){
-        messageEl.textContent=`${player1.name},its your turn.`
+        messageEl.textContent=`${player1.name}, its your turn.`
         playerMove(player1,gameboard,item.id);
       }
       if(type==="even"){
@@ -67,7 +67,7 @@ const fullGame=(item,player1,player2,gameboard)=>{
         if(player1.check3(gameboard)||player2.check3(gameboard)){
         }else if(i===9){
         }else{
-          messageEl.textContent=`${player1.name},its your turn.`
+          messageEl.textContent=`${player1.name}, its your turn.`
         playerMove(player2,gameboard,computerMove());
       }
     }
@@ -103,6 +103,6 @@ const resetGame=(player1,player2,gameboard)=>{
   type="odd"
   i=0;
   //change the textContent
-  messageEl.textContent=`${player1.name}, its your turn`
+  messageEl.textContent=`${player1.name}, make your move.`
 }
 export{fullGame,messageEl,resetGame,fullGameComputer}

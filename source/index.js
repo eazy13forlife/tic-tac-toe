@@ -13,7 +13,7 @@ let player2=returnPlayerObject("Player 2","0");
 const computer=returnPlayerObject("Computer","0")
 
 //set the title to player 1, its your turn,because player 1 begins first each time
-  messageEl.textContent=`${player1.name}, its your turn`
+  messageEl.textContent=`${player1.name}, make your move`
 
 let compSelect=null;
 let playerSelect=null;
@@ -32,7 +32,7 @@ playerButton.addEventListener("click",(e)=>{
   homePageEl.setAttribute("style","display:none;")
   gameContainerEl.setAttribute("style","display:block;");
   allSquares.forEach((square)=>{
-    square.addEventListener("click",playPlayer)//dont forget to change computer to player 2
+    square.addEventListener("click",playPlayer)
   })
   })
 
